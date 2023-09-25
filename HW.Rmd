@@ -1,0 +1,105 @@
+---
+title: "Homework_Surya"
+output: html_document
+date: "2023-09-24"
+---
+
+```{r}
+library(readxl)
+Typical_Employee_Survey_Data <- read_excel("C:/Users/surya/Downloads/Typical_Employee_Survey_Data.xlsx", 
+    col_names = FALSE)
+View(Typical_Employee_Survey_Data)
+
+mydataframe <- data.frame(Typical_Employee_Survey_Data)
+
+names(mydataframe) <- c("Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9","Q10","Q11")
+```
+```{r}
+summary(mydataframe)
+
+boxplot(mydataframe$Q1)
+boxplot(mydataframe$Q5)
+```
+```{r}
+mydataframe$Q2 <- as.factor(mydataframe$Q2)
+mydataframe$Q3 <- as.factor(mydataframe$Q3)
+mydataframe$Q4 <- as.factor(mydataframe$Q4)
+mydataframe$Q6 <- as.factor(mydataframe$Q6)
+mydataframe$Q7 <- as.factor(mydataframe$Q7)
+mydataframe$Q8 <- as.factor(mydataframe$Q8)
+mydataframe$Q9 <- as.factor(mydataframe$Q9)
+mydataframe$Q10 <- as.factor(mydataframe$Q10)
+mydataframe$Q11 <- as.factor(mydataframe$Q11)
+sapply(mydataframe, class)
+```
+```{r}
+#Q1
+hist(mydataframe$Q1,main = "Current Age of Employees", xlab = "Age", ylab = "Number of People", col="Blue")
+
+#Q2
+gender_counts <- table(mydataframe$Q2)
+pie(gender_counts, labels = c("Male","Female"), main = "Gender Distribution")
+
+#Q3
+job_satisfaction <- table(mydataframe$Q3)
+pie(job_satisfaction,labels = c("Very Satisfied","Moderately Satisfied","A Little Dissatisfied","Very Dissatisfied"), main = "Job Satisfaction")
+
+#Q4
+job_char <- table(mydataframe$Q4)
+pie(job_char,labels = c("High Income","No Danger of being fired","Flexible Hours","Opportunities for Advancement", "Enjoying the Work"), main = "Important Job Characteristics")
+
+#Q5
+hist(mydataframe$Q5,main = "Years of working for this employer", xlab = "Years worked", ylab = "Number of People", col="Blue")
+
+#Q6
+promoted <- table(mydataframe$Q6)
+pie(promoted,labels = c("Very Likely","Likely","Not Sure","Unlikely","Very Unlikely"), main = "Promotion Possibility")
+
+#Q7
+decisions <- table(mydataframe$Q7)
+pie(decisions,labels = c("Always","Much of the time","Sometimes","Never"), main = "Do you make decisions that affect your work?")
+
+#Q8
+budget <- table(mydataframe$Q8)
+pie(budget,labels = c("Yes","No"), main = "Do you participate in budgetary decisions?")
+
+#Q9
+proud <- table(mydataframe$Q9)
+pie(proud,labels = c("Very Proud","Somewhat Proud","Indifferent","Not at all proud"), main = "How proud are you to be working for this organization?")
+
+#Q10
+pay <- table(mydataframe$Q10)
+pie(pay,labels = c("Very Likely","Likely","Not Sure","Unlikely", "Very Unlikely"), main = "Would you turn down another job for more pay to stay in this organization?")
+
+#Q11
+relations <- table(mydataframe$Q11)
+pie(relations,labels = c("Very Good","Good","So So","Bad", "Very Bad"), main = "Relations between coworkers and colleagues?")
+
+
+# job_sat_counts <- table(Typical_Employee_Survey_Data$Job_Sat)
+
+# Convert factor levels back to numeric for plotting
+#job_sat_levels <- as.numeric(levels(Typical_Employee_Survey_Data$Job_Sat))
+
+# Create a bar plot
+#barplot(job_sat_counts, names.arg = job_sat_levels, main = "Job Satisfaction Distribution",
+      #  xlab = "Job Satisfaction Level", ylab = "Count")
+```
+```{r}
+plot(mydataframe$Q2, mydataframe$Q6)
+plot(mydataframe$Q3, mydataframe$Q4)
+plot(mydataframe$Q10,mydataframe$Q11)
+plot(mydataframe$Q9,mydataframe$Q10)
+plot(mydataframe$Q5,mydataframe$Q6,xlab = "Tenure with current employer",ylab = "Promotion Probability")
+plot(mydataframe$Q1,mydataframe$Q6,xlab = "Age",ylab = "Promotion Probability")
+plot(mydataframe$Q5,mydataframe$Q10,xlab = "Tenure with current employer",ylab = "Possibility of switching employer")
+plot(mydataframe$Q5,mydataframe$Q7,xlab = "Tenure with current employer",ylab = "Make decisions that affect your work")
+```
+
+
+
+
+
+```
+
+
