@@ -1,0 +1,115 @@
+---
+title: "Assignment 4"
+author: "Surya"
+date: "2023-10-09"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(TTR)
+library(fpp)
+library(fpp2)
+library(readxl)
+Small_Dataset <- read_excel("Surya/Desktop/Rutgers/MBA Sem 3/Business Forecasting/Small Dataset.xlsx")
+View(Small_Dataset)
+oilprice <- Small_Dataset
+oilprice
+plot(oilprice)
+acf(oilprice)
+```
+```{r}
+#Converting dataset to time series
+oilprice_ts <- ts(oilprice$oil_brent,frequency = 12, start = 1)
+oilprice_ts
+plot(oilprice_ts)
+acf(oilprice_ts)
+```
+```{r}
+#Mean Forecast
+mean_forecast <- meanf(oilprice_ts,5)
+plot(mean_forecast)
+acf(mean_forecast$residuals)
+```
+```{r}
+#Naive Forecast
+naive_forecast <- naive(oilprice_ts,5)
+plot(naive_forecast)
+naive_forecast$residuals
+acf(naive_forecast)
+naive_residuals <- naive_forecast$residuals 
+plot(naive_residuals)
+Acf(naive_residuals)
+```
+```{r}
+#Seasonal Naive Forecast
+snaive_forecast <- snaive(oilprice_ts,5)
+plot(snaive_forecast)
+snaive_forecast$residuals
+acf(snaive_forecast)
+snaive_residuals <- snaive_forecast$residuals
+plot(snaive_residuals)
+Acf(snaive_residuals)
+```
+```{r}
+#Random Walk Forecast
+rwalk_forecast <- rwf(oilprice_ts,5)
+plot(rwalk_forecast)
+rwalk_forecast$residuals
+acf(rwalk_forecast)
+rwalk_residuals <- rwalk_forecast$residuals
+plot(rwalk_residuals)
+Acf(rwalk_residuals)
+```
+```{r}
+#Moving Average Forecast
+MA5_forecast <- ma(oilprice_ts,order=5)
+plot(MA5_forecast)
+Acf(MA5_forecast)
+#MA5_forecast$residuals
+#MA5_residuals <- MA5_forecast$residuals
+#plot(MA5_residuals)
+#Acf(MA5_residuals)
+```
+```{r}
+#Plot all forecasts together
+plot(mean_forecast)
+lines(naive_forecast$mean,col="red")
+lines(rwalk_forecast$mean,col="green")
+lines(snaive_forecast$mean,col="black")
+lines(MA5_forecast,col="Pink")
+```
+```{r}
+#Attributes
+attributes(mean_forecast)
+attributes(naive_forecast)
+attributes(snaive_forecast)
+attributes(rwalk_forecast)
+attributes(MA5_forecast)
+```
+```{r}
+# Decomposition
+ets_forecast <- ets(oilprice_ts)
+plot(ets_forecast)
+attributes(ets_forecast)
+ets_forecast$mse
+```
+```{r}
+# HoltWinters
+HW_forecast <- HoltWinters(oilprice_ts)
+plot(HW_forecast)
+SSE_Simple <- HoltWinters(oilprice_ts,beta=FALSE,gamma=FALSE)
+attributes(SSE_Simple)
+plot(SSE_Simple)
+SSE_Simple$SSE
+head(SSE_Simple$fitted)
+```
+```{r}
+#Forecast
+forecast_ets_1 <- forecast.ets(ets_forecast, h=5)
+plot(forecast_ets_1)
+```
+
+
