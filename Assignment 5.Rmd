@@ -1,0 +1,73 @@
+---
+title: "Assignment 5"
+author: "Surya"
+date: "2023-10-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+```{r}
+library(fpp)
+library(fpp2)
+library(TTR)
+library(readxl)
+```
+```{r}
+#Importing Data
+Small_Dataset <- read_excel("Surya/Desktop/Rutgers/MBA Sem 3/Business Forecasting/Small Dataset.xlsx")
+View(Small_Dataset)
+oilprice <- Small_Dataset
+oilprice
+plot(oilprice)
+acf(oilprice)
+```
+```{r}
+#Converting dataset to time series
+oilprice_ts <- ts(oilprice$oil_brent,frequency = 12, start = 1)
+oilprice_ts
+plot(oilprice_ts)
+acf(oilprice_ts)
+```
+```{r}
+stl_decomp <- stl(oilprice_ts,s.window ="periodic")
+#Table View
+stl_decomp
+#Graph View
+plot(stl_decomp)
+#What else comes with stl object
+attributes(stl_decomp)
+#Lets print out a seasonal adjustment
+seasadj(stl_decomp)
+#Plot a line on the graph
+lines(seasadj(stl_decomp))
+#Default period forecast (no h is mentioned)
+f_stl <- forecast(stl_decomp)
+#you can pass the # of period (h)
+f_stl <- forecast(stl_decomp,h=15)
+#Print it out or graph it
+f_stl
+plot(f_stl)
+accuracy(f_stl)
+```
+```{r}
+#Residual analysis on forecast
+Acf(f_stl$residuals) #use capital A in Acf, small acf will start with lag 0 and will have value as 1
+f_stl$method #"STL +  ETS(A,Ad,N)" is the output, the first A is additive
+plot(oilprice_ts)
+lines(f_stl$fitted, col="red")
+
+#There is more than one way to do things (for decomposition)
+decomp_elec <- decompose(oilprice_ts)
+plot(decomp_elec) #it readily tells in the title of the plot that it is additive time series
+attributes(decomp_elec) # if you print this, the figure column is the seasonal additives, it also tells the type of time series 
+decomp_elec #printing the table to analyze
+seasadj(decomp_elec) #seasonal adjustment , we cannot do forecast for this, instead do the below
+forecast(seasadj(decomp_elec), h=12)
+f_decomp <- forecast(seasadj((decomp_elec),h=12))
+f_stl <- forecast(seasadj((stl_decomp),h=12))
+accuracy(f_decomp)
+accuracy(f_stl)
+```
+
