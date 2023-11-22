@@ -1,0 +1,45 @@
+---
+title: "Assignment 6 (ARIMA)"
+author: "Surya"
+date: "2023-11-21"
+output: html_document
+---
+
+```{r}
+#Load libraries and dataset
+library(fpp)
+library(fpp2)
+library(forecast)
+library(readxl)
+Small_Dataset <- read_excel("C:/Users/surya/OneDrive/Desktop/Surya/Desktop/Rutgers/MBA Sem 3/Business Forecasting/Small Dataset.xlsx")
+View(Small_Dataset)
+oilprice <- Small_Dataset
+oilprice
+#Converting dataset to time series
+oilprice_ts <- ts(oilprice$oil_brent,frequency = 12, start = 1)
+oilprice_ts
+```
+```{r}
+#Plot data and perform Acf analysis
+plot(oilprice_ts)
+Acf(oilprice_ts)
+```
+```{r}
+#Run ARIMA model and its residual analysis
+auto.arima(oilprice_ts, stepwise=FALSE, approximation=FALSE)
+auto.arima(oilprice_ts, stepwise=FALSE, approximation=FALSE, trace = TRUE)
+fitoil <- auto.arima(oilprice_ts, stepwise=FALSE, approximation=FALSE, trace = TRUE)
+fitoil # ARIMA model (0,1,0) is the best model. The sigma value seems a bit high, which suggests more than normal deviation from the original data.
+Acf(fitoil$residuals) #Acf plot of residuals is within significant lines.
+residual <- fitoil$residuals
+plot(residual)
+hist(residual) # the histogram has outliers and partially seems like a normal curve. Hence, we should not consider this model.
+fcast <- forecast(fitoil, h=5)
+plot(fcast)
+fcast
+plot(oilprice_ts)
+lines(fcast$fitted, col="red")
+accuracy(fcast) #MAPE for this model is 5.49%, which is acceptable, but can be better. I would not consider this model for this data set.
+```
+
+
